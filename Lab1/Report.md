@@ -11,7 +11,7 @@ and intro about soldering
 2. _Steps_
 
 * I solder three wire on bread board
-![Image of Soldering]\Lab1\Images\SolderingPractice.jpg
+![Image of Soldering](https://github.com/UCSD-Product-Engineering/ece16-fa19-Zihaokong/blob/master/Lab1/Images/SolderingPractice.jpg?raw=true)
 * I complete the quiz
-![Image of Quiz]\Lab1\Images\ResponsibilityContract.jpg
+![Image of Quiz]\Lab1(https://github.com/UCSD-Product-Engineering/ece16-fa19-Zihaokong/blob/master/Lab1/Images/ResponsibilityContract.jpg?raw=true)
 3. __
