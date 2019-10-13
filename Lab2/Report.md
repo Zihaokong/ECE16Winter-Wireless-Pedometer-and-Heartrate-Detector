@@ -1,7 +1,7 @@
 Zihao Kong
 
 A15502295
-# **Lab1**
+# **Lab2**
 ## **Introduction**
 This lab is about how to connect a OLED monitor and a IMU sensor to Arduino board, and being able to use Python as a way to do Serial Communication.
 
