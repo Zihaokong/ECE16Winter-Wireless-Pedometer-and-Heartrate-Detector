@@ -154,19 +154,13 @@ void writeToOLED() {
   dtostrf(gz, 6, 0, g_z);
   sprintf(out1, "Ax%sGx%s\nAy%sGy%s\nAz%sGz%s", a_x, g_x, a_y, g_y, a_z, g_z);
   showMessage(out1, 1, true);
-
-
-
-
-
-
-
 }
 
 // --------------------------------------------------------------------------------
 // Function to do the usual Arduino setup
 // --------------------------------------------------------------------------------
 void setup() {
+  pinMode(13,OUTPUT);
   // Initialize the IMU
   initIMU();
   initDisplay();
@@ -175,6 +169,7 @@ void setup() {
 
   // Initialize Serial port
   Serial.begin(9600);
+  digitalWrite(13,LOW);
 }
 
 // --------------------------------------------------------------------------------
@@ -184,11 +179,15 @@ void setup() {
 
 
 void loop() {
-
+  
 
   if (getData()) {
     writeToSerial();
+    if(gy >4000||gx>4000||gz>4000){
+      digitalWrite(13,HIGH);
+    }
     writeToOLED();
+    digitalWrite(13,LOW);
   }
 
   // TODO: call the appropriate function from above for writing data here
