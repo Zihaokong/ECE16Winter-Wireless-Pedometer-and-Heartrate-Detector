@@ -26,7 +26,8 @@ which contains convenient API for users to use in BLE module._
 * AT+CON(YOUR DEVICE ADDRESS)
 * AT+RESET
 * AT+RENEW
-
+5. _Here is a picture._
+![Image of AT commands testing](https://github.com/UCSD-Product-Engineering/ece16-fa19-Zihaokong/blob/master/Lab3/Images/ATcommand.jpg?raw=true)
 
 ## **Objective 2**
 1. _In order to build connection, we find a partner and connect with each other._
@@ -35,7 +36,8 @@ which contains convenient API for users to use in BLE module._
 * Peripheral has IMME0 and ROLE0
 3. _Then the central askes peripheral for its address._
 4. _Once the connection is established, we exchange our name with role._
-
+5. _This is a picture of Parter BLE._
+![Image of AT commands testing](https://github.com/UCSD-Product-Engineering/ece16-fa19-Zihaokong/blob/master/Lab3/Images/ParterBLE.jpg?raw=true)
 
 ## **Objective 3**
 1. _This is building connection between laptop and Arduino._
