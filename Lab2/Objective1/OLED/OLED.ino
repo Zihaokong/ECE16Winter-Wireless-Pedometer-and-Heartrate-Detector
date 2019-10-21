@@ -37,20 +37,12 @@ void showMessage(const char * message, int row, bool cleardisplay) {
 
 void setup() {
   initDisplay();
-  showMessage("Initializing...", 1, true);
-  showMessage("Success!", 2, true);
+  showMessage("I", 1, false);
+  showMessage(" love you", 1, false);
 
   Serial.begin(9600);
 
 }
-//
-//
-//if (i >= 16) {
-//        Serial.println("too long");
-//        showMessage("too long", 1, true);
-//        memset(out_str, 0, sizeof(out_str));
-//        i = 0;
-//      }
 
 
 
