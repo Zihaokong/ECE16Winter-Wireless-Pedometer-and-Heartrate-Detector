@@ -10,8 +10,8 @@ to build connection between Arduino and Laptop.
 1. _Before we use the starter code, there is a library to install called AltSoftSerial,
 which contains convenient API for users to use in BLE module._
 2. _After we install the API, we are able to include it it our C code_
-3. _The objective is to test the AT commands on Serial monitor and see which one does what thing.
-4. _Those commands are:
+3. _The objective is to test the AT commands on Serial monitor and see which one does what thing._
+4. _Those commands are:_
 * AT
 * AT+NAME(YOURNAME)
 * AT+NAME?
