@@ -70,7 +70,6 @@ void setup() {
   initDisplay();
   u8x8.clearDisplay();
 
-
 }
 
 
@@ -84,7 +83,7 @@ void loop()
     if (c == "C") isStart = true;
 
     //this part control the printing on OLED screen, since showMessage receive a pointer of char, and this readBLE execute every frame, reading a byte, I use
-    //NumberofCharacters to count the current position of the cursor, thus being able to print word. 
+    //NumberofCharacters to count the current position of the cursor, thus being able to print word.
     showMessage(&c, numberOfCharacters, 1, false);
     numberOfCharacters += 1;
   }
@@ -93,17 +92,17 @@ void loop()
     if (millis() - startTime > 1000) {
       startTime = millis();
       hm10.print("*");
-      
+
       numberOfCharacters = 0;
       u8x8.setCursor(0, 1);
 
     }
   }
-//  else{
-//    
-//  }
+  //  else{
+  //
+  //  }
 
-    // Read from the Serial Monitor and send to the BLE module
-    if (Serial.available())
-      writeBLE();
+  // Read from the Serial Monitor and send to the BLE module
+  if (Serial.available())
+    writeBLE();
 }
