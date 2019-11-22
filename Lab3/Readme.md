@@ -52,3 +52,5 @@ IMME1, AT+NOTL1, AT+ROLE1, AT+RESET as the configuration step._
 6. _On Arduino side, once a "C" char is read, the isStart boolean becomes true, then it sends a star every second to computer._
 7. _When Computer readBLE function returns a *, it writes Number: (x), in which x is a counter of how many * has been sent._
 8. _Number: (x) is printed on OLED screen, because we integrate the code in LAB2, import modules and use showMessage() to print what's been sent from Computer._
+9. _Here is a picture._
+![Picture of OLED](https://github.com/UCSD-Product-Engineering/ece16-fa19-Zihaokong/blob/master/Lab3/Images/Objective3.jpg?raw=true)

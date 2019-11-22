@@ -1,7 +1,7 @@
 import serial
 from time import sleep        # sleep is like the delay function in Arduino
 
-serial_port = "COM4"                # You need to put the correct port for the console cable (not Arduino!)
+serial_port = "COM6"                # You need to put the correct port for the console cable (not Arduino!)
 
 # Read from serial ser and return the string that was read
 def read_BLE(ser):
@@ -40,18 +40,20 @@ with serial.Serial(port=serial_port, baudrate=9600, timeout=1) as ser:
 
 
     #detects connection and then check if success, it exits the loop
-    while 1:
+    x=0
+    while x<4:
         print("number of times %d"%x)
-        write_BLE("AT+CON78DB2F16821E", ser)
+        write_BLE("AT+CON78DB2FDB7629", ser)
         sleep(2)
-
+        x+=1
         string = read_BLE(ser)
         print(string)
-        if "OK+CONNAOK+CONN" in string:
-            break
+
 
     write_BLE("Connected", ser)
     count = 0
+    sleep(1)
+    read_BLE(ser)
     while 1:
         sleep(0.1)
         #read from BLE every 0.1 sec

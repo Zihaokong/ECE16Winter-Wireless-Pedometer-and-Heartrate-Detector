@@ -126,8 +126,6 @@ void writeToSerial() {
   Serial.print(gy);
   Serial.print(" ");
   Serial.println(gz);
-
-
 }
 
 // --------------------------------------------------------------------------------
@@ -186,7 +184,7 @@ void loop() {
     if(gy >4000||gx>4000||gz>4000){
       digitalWrite(13,HIGH);
     }
-    writeToOLED();
+    //writeToOLED();
     digitalWrite(13,LOW);
   }
 
