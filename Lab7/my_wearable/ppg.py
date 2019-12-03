@@ -16,7 +16,7 @@ from scipy import signal as sig
 from sklearn.mixture import GaussianMixture
 from scipy.stats import norm
 from scipy import signal as sig
-
+from Lab7.my_wearable.BLE import BLE
 class PPG:
     # Attributes of the class PPG
     _maxlen = 0
@@ -37,8 +37,8 @@ class PPG:
 
         print("max buffer length is ",self._maxlen)
         sleep(1)
-        fig = plt.figure(1)
-        fig.canvas.mpl_connect('key_press_event', self.__handle_keypress)
+        #fig = plt.figure(1)
+        #fig.canvas.mpl_connect('key_press_event', self.__handle_keypress)
         self.__fs = fs
         return
 
@@ -72,7 +72,6 @@ class PPG:
     ================================================================================ """
 
     def append(self, msg_str):
-
         try:
             #how many stuff in buffer
             t, imu, ir = msg_str.strip().split(",")
@@ -89,17 +88,8 @@ class PPG:
                 self.__data_buffer[:-1] = self.__data_buffer[1:]
                 self.__data_buffer[-1] = int(ir)
 
-
-
-
-
-
-
-
         except ValueError:
             print("Invalid Data: " + msg_str)
-            # self.__data_buffer = self.__data_buffer.append(self.__data_buffer[-1])
-            # self.__time_buffer = self.__time_buffer.append(self.__time_buffer[-1])
 
     ### TO DO ###
     # 1. Inside of a try-except block
@@ -146,7 +136,6 @@ class PPG:
 
     def load_file(self, filename):
         self.reset()
-
         with open(filename, "r+") as file:
             n = 0
             while 1:
@@ -182,13 +171,9 @@ class PPG:
     :param: None
     :return: None
     ================================================================================ """
-    def plot_time(self):
-        plt.plot(np.diff(self.__time_buffer))
-        plt.show()
+
     def plot(self):
-
         max = np.amax(self.__data_buffer)
-
         min = np.amin(self.__data_buffer)
 
         plt.xlim(self.__time_buffer[0], self.__time_buffer[-1])
@@ -294,16 +279,51 @@ class PPG:
 
 
     def hr_heuristics(self):
-        pass
-        # index = []
-        # unique, counts = np.unique(self.__result, return_counts=True)
-        # print(unique,counts)
-        # if counts[0]>counts[1]:
-        #
-        #     print("label 1 is heart beat")
-        # else:
-        #
-        #     print("label 2 is heart beat")
+        #determine which is "heartbeat", which is "not heartbeat"
+        data = self.__result
+        tags, frequency = np.unique(data,return_counts=True)
+        label = {}
+
+        #assume number of not heartbeat is more than heartbeat
+        #the bigger number is "not heartbeat"
+        #the dictionary corespond heartbeat to the label that gmm predicts
+        if frequency[0] > frequency[1]:
+            label["not heart beat"] = tags[0]
+            label["heartbeat"] = tags[1]
+        else:
+            label["not heart beat"] = tags[1]
+            label["heartbeat"] = tags[0]
+
+
+        # filter out the noise in result, prevent small peaks, then find local max
+        self.__lowpass_filter(7)
+        local_maxes,_ = sig.find_peaks(self.__data_buffer,height =[0,0.5])
+
+
+        new_time = []
+        # get rid of small peak that is incorrectly labeled by machine learning, then count how many is left.
+        heartbeat = 0
+        for x in local_maxes:
+            #if the peak is higher than a threshold, and also the peak labeled as "heartbeat", we count
+            if self.__result[x] == label["heartbeat"] and self.__data_buffer[x] >0.18:
+                new_time.append(self.__time_buffer[x])
+                self.__heartbeats.append(self.__data_buffer[x])
+                heartbeat+=1
+
+        #plot result
+        # plt.plot(self.__time_buffer, self.__data_buffer)
+        # plt.plot(new_time, self.__heartbeats, "x")
+        # plt.plot(self.__time_buffer,self.__result)
+        # plt.show()
+
+        #calculate
+        time_diff = (self.__time_buffer[-1] - self.__time_buffer[0])/1000
+        rate = (heartbeat/time_diff)*60
+
+        string = "heart beat per min is:" +str(rate)
+        print(string)
+        return string
+
 
 
     # At a bare minimum, you can do the following steps. BUT you should definitely consider the edge cases we discussed in class!!!
@@ -335,15 +355,11 @@ class PPG:
         self.__data_buffer = np.array(self.__data_buffer).reshape(-1, 1)
         gmm.fit(self.__data_buffer)  # data has to be (-1,1)
         self._model = gmm
-
-
-
     # 1. Create a GMM object and specify the number of components (classes) in the object
     # 2. Fit the model to our training data. NOTE: You may need to reshape with np.reshape(-1,1)
     # 3. Return None
 
     def plt_hist(self, data, bin_count):
-
         mu1 = self._model.means_[0,0]
         mu2 = self._model.means_[1,0]
         var1, var2 = self._model.covariances_
@@ -353,7 +369,7 @@ class PPG:
         self.__filter_ppg()
 
         x = np.linspace(np.min(self.__data_buffer), np.max(self.__data_buffer), num=1000).reshape([1000, 1])
-        plt.figure()
+        plt.figure("histogram of data")
         plt.hist(self.__data_buffer, bins=bin_count, density=True)
         plt.plot(x,wgt1*norm.pdf(x, mu1, np.sqrt(var1))+wgt2*norm.pdf(x, mu2, np.sqrt(var2)))
         plt.xlabel("PPG reading")
@@ -413,14 +429,23 @@ class PPG:
 # 8. Return None
 
     def process(self):
+        #plt.figure("plot of test.csv")
         self.__filter_ppg()
-        self.__data_buffer = np.array(self.__data_buffer).reshape(-1,1)
-        plt.plot(self.__time_buffer,self.__data_buffer)
-        self.__result = self._model.predict(self.__data_buffer)#new Data
-        plt.plot(self.__time_buffer,self.__result)
+        result = np.array(self.__data_buffer).reshape(-1,1)
+        #plt.plot(self.__time_buffer,self.__data_buffer)
+        self.__result = self._model.predict(result)#new Data
+        #plt.plot(self.__time_buffer,self.__result)
 
-        plt.show()         # YOU ALREADY HAVE THIS METHOD! Just at these lines of code to the method
-        self.hr_heuristics()
+        #plt.show()         # YOU ALREADY HAVE THIS METHOD! Just at these lines of code to the method
+        string = self.hr_heuristics()
+
+        hm10 = BLE("COM4",9600,False)
+        hm10.connect("78DB2F16821E")
+        hm10.write(string+";")
+        print("process finish")
+
+
+
         # 1. Using the GMM model from the previous objective, call the GMM's predict() method to classify the new data
         # 2. Next call hr_heuristics() to calculate the heart rate
         # 3. Return the HR

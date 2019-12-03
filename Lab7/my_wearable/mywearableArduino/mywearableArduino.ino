@@ -237,10 +237,7 @@ void sendDataIMU(unsigned long currTimeMicros) {
   sprintf(IMUSend, "%8ld,%5ld,%5d;", currTime, sum, ppgValue);
 
   hm10.write(IMUSend);
-//  static unsigned long prev = 0;
-//  sprintf(IMUSend, "%8ld", currTime-prev);
-//  prev = currTime;
-//  Serial.println(IMUSend);
+
 }
 
 
@@ -248,8 +245,6 @@ void sendDataIMU(unsigned long currTimeMicros) {
 // Setup: executed once at startup or reset
 // --------------------------------------------------------------------------------
 void setup() {
-  
-  
   pinMode(ppgPin, INPUT);
   pinMode(3, INPUT_PULLUP);
   Serial.begin(9600);
@@ -259,6 +254,8 @@ void setup() {
   Serial.println("==============================");
   attachInterrupt(digitalPinToInterrupt(3), buttonInterruptISR, FALLING);
   initIMU();
+
+  
 }
 
 // --------------------------------------------------------------------------------

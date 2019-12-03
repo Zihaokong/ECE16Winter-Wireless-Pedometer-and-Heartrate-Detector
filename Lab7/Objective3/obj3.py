@@ -33,9 +33,9 @@ def generate_set(path,names):
     t = []
     ir = []
     offset_value = 0
+    print(names)
     for i in range(len(names)):
         names[i] = path + names[i]
-        print(names[i])
 
         training_sets = os.listdir(names[i])
 
@@ -92,11 +92,12 @@ testing_sets = a[8:]
 
 tr_t, tr_ir,va_t, va_ir,te_t, te_ir = load_file(training_sets,validation_sets,testing_sets,"../HR Data/")
 ppg = PPG(30, 25)
+
 ppg.train(tr_ir)
 #ppg.plt_hist(tr_ir,100)
 #ppg.plt_labels(va_ir,va_t)
 # ppg.plt_labels(te_ir,te_t)
-ppg.load_file('GMM_YL_3.csv')
+ppg.load_file('test.csv')
 ppg.process()
 
 

@@ -141,13 +141,13 @@ def filter_ppg(signal):
     #signal = np.gradient(signal)
     return signal
 
-# gmm_validate_t, gmm_validate_ir, gmm_training_t, gmm_training_ir = load_file(25,"../HR Data/",validation_name="LF")
+# gmm_validate_t, gmm_validate_ir, gmm_training_t, gmm_training_ir = load_file(25,"../HR Data/",validation_name="ZK")
 # gmm_training_ir = filter_ppg(gmm_training_ir)
 # gmm_validate_ir = filter_ppg(gmm_validate_ir)
-#
-# #plt.hist(gmm_training_ir,bins = "auto",density=True)
+
+# plt.hist(gmm_training_ir,bins = "auto",density=True)
 # plt.show()
-#
+
 # gmm = GaussianMixture(n_components=2)
 # gmm_training_ir = np.array(gmm_training_ir).reshape(-1,1)
 # gmm_validate_ir = np.array(gmm_validate_ir).reshape(-1,1)
@@ -156,15 +156,12 @@ def filter_ppg(signal):
 # mu2 = gmm.means_[1, 0]
 # var1, var2 = gmm.covariances_
 # wgt1, wgt2 = gmm.weights_
-#
-#
 # x = np.linspace(np.min(gmm_training_ir),np.max(gmm_training_ir),num = 1000).reshape([1000,1])
 # plt.hist(gmm_training_ir,bins = "auto",density=True)
 # plt.plot(x,wgt1*norm.pdf(x, mu1, np.sqrt(var1)))
 # plt.plot(x,wgt2*norm.pdf(x, mu2, np.sqrt(var2)))
-#
-# #plot sum
-# #plt.plot(x,wgt1*norm.pdf(x, mu1, np.sqrt(var1))+wgt2*norm.pdf(x, mu2, np.sqrt(var2)))
+
+#plt.plot(x,wgt1*norm.pdf(x, mu1, np.sqrt(var1))+wgt2*norm.pdf(x, mu2, np.sqrt(var2)))
 #
 #
 # plt.tight_layout()
@@ -175,10 +172,10 @@ def filter_ppg(signal):
 #
 #
 # #plot validate data
-# # results = gmm.predict(gmm_validate_ir)
-# # plt.plot(gmm_validate_t,results)
-# # plt.plot(gmm_validate_t,gmm_validate_ir)
-# # plt.show()
+# results = gmm.predict(gmm_validate_ir)
+# plt.plot(gmm_validate_t,results)
+# plt.plot(gmm_validate_t,gmm_validate_ir)
+# plt.show()
 #
 #
 # #plot training data
