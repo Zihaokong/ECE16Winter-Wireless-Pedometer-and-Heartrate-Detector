@@ -161,6 +161,32 @@ MPU6050 IMU(MPU_addr);      // Instantiate IMU object
 #define OLED_RESET 4
 U8X8_SSD1306_128X32_UNIVISION_HW_I2C u8x8(OLED_RESET);
 
+int index = 0;
+char out_str[16];
+int characterCounter = 0;
+
+void initDisplay() {
+  u8x8.begin();
+  u8x8.setPowerSave(0);
+  u8x8.setFont(u8x8_font_amstrad_cpc_extended_r);
+  u8x8.setCursor(0, 0);
+}
+void showMessage(const char * message, int row, bool cleardisplay) {
+  if (cleardisplay) {
+    u8x8.clearDisplay();
+  }
+  u8x8.setCursor(0, row);
+  u8x8.print(message);
+}
+
+
+
+
+
+
+
+
+
 //void interruptPinISR() {
 //  imuDataReady = true;
 //}
@@ -237,8 +263,13 @@ void sendDataIMU(unsigned long currTimeMicros) {
   sprintf(IMUSend, "%8ld,%5ld,%5d;", currTime, sum, ppgValue);
 
   hm10.write(IMUSend);
-
 }
+
+
+
+
+
+
 
 
 // --------------------------------------------------------------------------------
@@ -254,6 +285,18 @@ void setup() {
   Serial.println("==============================");
   attachInterrupt(digitalPinToInterrupt(3), buttonInterruptISR, FALLING);
   initIMU();
+  initDisplay();
+  
+  pinMode(7, OUTPUT);
+  digitalWrite(7, LOW);
+  delay(500);
+  digitalWrite(7, HIGH);
+  delay(100);
+  digitalWrite(7, LOW);
+  delay(500);
+  digitalWrite(7, HIGH);
+  delay(100);
+  showMessage("Ready", 0, false);
 
   
 }
@@ -266,6 +309,14 @@ void setup() {
 void loop() {
   
   if (buttonPressed) {
+    digitalWrite(7, LOW);
+    delay(500);
+    digitalWrite(7, HIGH);
+    delay(100);
+    digitalWrite(7, LOW);
+    delay(500);
+    digitalWrite(7, HIGH);
+    delay(100);
     toggleSleep();
   }
   if (asleep == false) {
@@ -273,6 +324,7 @@ void loop() {
       // Read a message from the BLE module and send to the Serial Monitor
       if (readBLE()) {
         Serial.println(in_text);
+        showMessage(in_text, 0, true);
       }
     }
     // Read from the Serial Monitor and send to the BLE module

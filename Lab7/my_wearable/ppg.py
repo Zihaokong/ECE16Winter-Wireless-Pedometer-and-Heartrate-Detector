@@ -36,9 +36,8 @@ class PPG:
         self._maxlen = maxlen  # Set the max length of the buffer
 
         print("max buffer length is ",self._maxlen)
-        sleep(1)
-        #fig = plt.figure(1)
-        #fig.canvas.mpl_connect('key_press_event', self.__handle_keypress)
+        fig = plt.figure(1)
+        fig.canvas.mpl_connect('key_press_event', self.__handle_keypress)
         self.__fs = fs
         return
 
@@ -50,7 +49,7 @@ class PPG:
 
     def __handle_keypress(self, event):
         if event.key == 'enter':
-            self.save_file("test.csv")
+            self.save_file("test1.csv")
 
     """ ================================================================================
     Resets the PPG to default state
@@ -203,10 +202,10 @@ class PPG:
 
     def plot_live(self):
         plt.cla()  # clear the axes
-        plt.plot(self.__time_buffer,self.__data_buffer)
+        plt.plot(self.__data_buffer)
         #print("length: ",len(self.__time_buffer),len(self.__data_buffer))
         plt.show(block=False)  # similar to interactive mode
-        plt.pause(0.001)
+        plt.pause(0.000001)
 ## TO DO ##
 # 1. Clear the plot axes (https://matplotlib.org/3.1.1/api/pyplot_summary.html)
 # 2. Plot the the data buffer (Note: the time buffer is not being plotted!)
@@ -236,11 +235,11 @@ class PPG:
         return
 
     def __filter_ppg(self):
-        self.__demean_filter()
 
-        self.__lowpass_filter(7)
-        self.__highpass_filter(0.9)
-        #self.__data_buffer = np.gradient(self.__data_buffer)
+        self.__demean_filter()
+        self.__lowpass_filter(10)
+        self.__highpass_filter(0.3)
+        self.__data_buffer = np.gradient(self.__data_buffer)
 
 
     def __find_heartbeats(self):
@@ -296,7 +295,7 @@ class PPG:
 
 
         # filter out the noise in result, prevent small peaks, then find local max
-        self.__lowpass_filter(7)
+        #self.__lowpass_filter(4)
         local_maxes,_ = sig.find_peaks(self.__data_buffer,height =[0,0.5])
 
 
@@ -305,16 +304,17 @@ class PPG:
         heartbeat = 0
         for x in local_maxes:
             #if the peak is higher than a threshold, and also the peak labeled as "heartbeat", we count
-            if self.__result[x] == label["heartbeat"] and self.__data_buffer[x] >0.18:
+            if self.__result[x] == label["heartbeat"] and self.__data_buffer[x] >0:
                 new_time.append(self.__time_buffer[x])
                 self.__heartbeats.append(self.__data_buffer[x])
                 heartbeat+=1
 
         #plot result
-        # plt.plot(self.__time_buffer, self.__data_buffer)
-        # plt.plot(new_time, self.__heartbeats, "x")
-        # plt.plot(self.__time_buffer,self.__result)
-        # plt.show()
+        plt.figure("GMM predicted test1")
+        plt.plot(self.__time_buffer, self.__data_buffer)
+        plt.plot(new_time, self.__heartbeats, "x")
+        plt.plot(self.__time_buffer,self.__result)
+        plt.show()
 
         #calculate
         time_diff = (self.__time_buffer[-1] - self.__time_buffer[0])/1000
@@ -439,10 +439,10 @@ class PPG:
         #plt.show()         # YOU ALREADY HAVE THIS METHOD! Just at these lines of code to the method
         string = self.hr_heuristics()
 
-        hm10 = BLE("COM4",9600,False)
-        hm10.connect("78DB2F16821E")
-        hm10.write(string+";")
-        print("process finish")
+        # hm10 = BLE("COM4",9600,False)
+        # hm10.connect("78DB2F16821E")
+        # hm10.write(string+";")
+        # print("process finish")
 
 
 
@@ -450,9 +450,4 @@ class PPG:
         # 2. Next call hr_heuristics() to calculate the heart rate
         # 3. Return the HR
 
-    def normalize(self):
-        max = np.amax(self.__data_buffer)
-        min = np.amin(self.__data_buffer)
-        for i in range(0, len(self.__data_buffer)):
-            self.__data_buffer[i] = (self.__data_buffer[i] - min) / (max - min)
 

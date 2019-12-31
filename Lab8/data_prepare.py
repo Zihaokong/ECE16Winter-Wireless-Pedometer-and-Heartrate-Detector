@@ -1,8 +1,6 @@
-from Lab7.my_wearable.ppg import PPG
 import numpy as np
 import glob
 import os
-print(os.getcwd())
 
 
 def load_file(training_index,validation_index,testing_index,path):
@@ -78,24 +76,4 @@ def offset_time(array):
     for i in range(0,len(array)):
         array[i] = array[i] - offset
     return array
-
-
-
-a = np.random.permutation(9)
-training_sets = a[0:9]
-validation_sets = a[6:8]
-testing_sets = a[8:]
-
-
-tr_t, tr_ir,va_t, va_ir,te_t, te_ir = load_file(training_sets,validation_sets,testing_sets,"../HR Data/")
-ppg = PPG(750, 25)
-
-ppg.train(tr_ir)
-#ppg.plt_hist(tr_ir,100)
-#ppg.plt_labels(va_ir,va_t)
-# ppg.plt_labels(te_ir,te_t)
-ppg.load_file('test1.csv')
-ppg.process()
-
-
 

@@ -20,7 +20,7 @@ peripheral_mac = "78DB2F16821E" # Mac Address of the Arduino HM-10
 signal_len = 30 # length of signal in seconds (start with 10)
 sample_rate = 25                  # samples / second
 buff_len = signal_len*sample_rate # length of the data buffers
-plot_refresh = 1                 # draw the plot every X samples (adjust as needed)
+plot_refresh = sample_rate/2                 # draw the plot every X samples (adjust as needed)
 
 """ -------------------- Test #1 -------------------- """
 ppg = PPG(buff_len, sample_rate)

@@ -3,8 +3,8 @@ unsigned long startTime = millis();
 bool isOpen = false;
 void setup() {
   Serial.begin(9600);
-  pinMode(4, OUTPUT);
-  digitalWrite(4, HIGH);
+  pinMode(7, OUTPUT);
+  digitalWrite(7, HIGH);
   // put your setup code here, to run once:
 
 }
